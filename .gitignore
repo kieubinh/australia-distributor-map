@@ -1,0 +1,12 @@
+node_modules/
+__pycache__/
+.pytest_cache/
+.vercel/
+
+.env
+.env.*
+!.env.example
+
+*.log
+Thumbs.db
+.DS_Store

@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Australia Distributor Map</title>
+    <link href="https://unpkg.com/maplibre-gl/dist/maplibre-gl.css" rel="stylesheet" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <aside class="panel" aria-label="Distributor controls">
+        <header class="panel-header">
+          <p class="eyebrow">Australia</p>
+          <h1>Distributor Map</h1>
+          <div class="total-count" id="visibleCount">Loading distributors</div>
+        </header>
+
+        <section class="brand-filters" aria-label="Brand filters">
+          <label class="brand-toggle knauf">
+            <input type="checkbox" name="brand" value="knauf" checked />
+            <span class="brand-dot"></span>
+            <span class="brand-name">Knauf</span>
+            <span class="brand-count" id="countKnauf">0</span>
+          </label>
+          <label class="brand-toggle gyprock">
+            <input type="checkbox" name="brand" value="gyprock" checked />
+            <span class="brand-dot"></span>
+            <span class="brand-name">CSR Gyprock</span>
+            <span class="brand-count" id="countGyprock">0</span>
+          </label>
+          <label class="brand-toggle siniat">
+            <input type="checkbox" name="brand" value="siniat" checked />
+            <span class="brand-dot"></span>
+            <span class="brand-name">Siniat</span>
+            <span class="brand-count" id="countSiniat">0</span>
+          </label>
+        </section>
+
+        <section class="search-block" aria-label="Distributor search">
+          <label for="searchInput">Search</label>
+          <input id="searchInput" type="search" placeholder="Company, suburb, state, email" autocomplete="off" />
+        </section>
+
+        <section class="actions" aria-label="Map actions">
+          <button id="fitAllButton" type="button">Fit Visible Pins</button>
+          <button id="clearSearchButton" type="button">Clear Search</button>
+        </section>
+
+        <section class="list-wrap" aria-label="Distributor list">
+          <div class="list-meta" id="listMeta">Loading</div>
+          <div class="distributor-list" id="distributorList"></div>
+        </section>
+      </aside>
+
+      <section class="map-wrap" aria-label="Map of Australia distributors">
+        <div id="map"></div>
+        <div class="map-tools" aria-label="Map zoom controls">
+          <button id="zoomInButton" type="button" aria-label="Zoom in" title="Zoom in">+</button>
+          <button id="zoomOutButton" type="button" aria-label="Zoom out" title="Zoom out">-</button>
+          <button id="resetMapButton" type="button" aria-label="Show Australia" title="Show Australia">AU</button>
+        </div>
+        <div class="map-summary" id="mapSummary">
+          <strong>283</strong>
+          <span>total pins</span>
+        </div>
+      </section>
+    </main>
+
+    <script src="https://unpkg.com/maplibre-gl/dist/maplibre-gl.js"></script>
+    <script src="./app.js" type="module"></script>
+  </body>
+</html>

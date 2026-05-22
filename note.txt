@@ -1,0 +1,9 @@
+The API key itself is free, but Google requires a billing account.
+
+For this app, using Google Maps JavaScript API would usually bill as Dynamic Maps:
+
+First 10,000 map loads/month: free
+After that: US$7 per 1,000 map loads up to 100,000/month
+Zooming/panning is not charged
+Your 283 pins do not multiply the cost. It is mainly charged when the map loads.
+
