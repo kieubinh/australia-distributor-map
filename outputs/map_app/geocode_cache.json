@@ -1061,5 +1061,18 @@
     "longitude": 115.8035207,
     "displayName": "Ledgar Road, Balcatta, Perth, Western Australia, 6021, Australia",
     "precision": "road"
+  },
+  "27 Nyrang Street, Lidcombe, NSW 2141, Australia": {
+    "latitude": -33.8518992,
+    "longitude": 151.0441903,
+    "displayName": "27, Nyrang Street, Lidcombe, Sydney, New South Wales, 2141, Australia",
+    "precision": "place"
+  },
+  "176 â€“ 178 Aumuller Street, Cairns, QLD, 4870, Australia": null,
+  "Cairns, QLD 4870, Australia": {
+    "latitude": -16.9206657,
+    "longitude": 145.7721854,
+    "displayName": "Cairns, Queensland, 4870, Australia",
+    "precision": "city"
   }
 }

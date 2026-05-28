@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 96" role="img" aria-labelledby="title desc">
+  <title id="title">BM Sydney Building Materials Pty Ltd.</title>
+  <desc id="desc">BM Sydney logo with green and gold building mark.</desc>
+  <rect width="360" height="96" fill="#f7f7f7"/>
+  <g transform="translate(24 14)">
+    <path d="M0 27 L18 13 L18 68 L0 68 Z" fill="#315C3B"/>
+    <path d="M24 11 L43 0 L62 11 L62 68 L24 68 Z" fill="#A89222"/>
+    <path d="M68 13 L86 27 L86 68 L68 68 Z" fill="#315C3B"/>
+  </g>
+  <g fill="#202020" font-family="Arial, Helvetica, sans-serif">
+    <text x="124" y="47" font-size="34" font-weight="400" letter-spacing="1">BM SYDNEY</text>
+    <text x="125" y="70" font-size="18" font-weight="400">Building Materials Pty Ltd.</text>
+  </g>
+</svg>

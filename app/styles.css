@@ -2,6 +2,7 @@
   --knauf: #42a5e8;
   --gyprock: #111111;
   --siniat: #d91c8b;
+  --hebel: #243588;
   --ink: #182026;
   --muted: #60707d;
   --line: #d7e0e6;
@@ -119,6 +120,10 @@ h1 {
 
 .brand-toggle.siniat {
   --brand-color: var(--siniat);
+}
+
+.brand-toggle.hebel {
+  --brand-color: var(--hebel);
 }
 
 .brand-dot {
@@ -422,7 +427,7 @@ h1 {
 }
 
 .cluster-marker.mixed {
-  background: conic-gradient(var(--knauf) 0 33%, var(--gyprock) 33% 66%, var(--siniat) 66% 100%);
+  background: conic-gradient(var(--knauf) 0 25%, var(--gyprock) 25% 50%, var(--siniat) 50% 75%, var(--hebel) 75% 100%);
 }
 
 .maplibregl-popup-content {
@@ -439,8 +444,31 @@ h1 {
 }
 
 .maplibregl-popup-content .popup {
-  width: 250px;
+  box-sizing: border-box;
+  width: min(306px, calc(100vw - 48px));
   padding: 14px;
+}
+
+.popup-logo-wrap {
+  display: grid;
+  width: 100%;
+  min-height: 72px;
+  margin: 0 0 10px;
+  padding: 8px 10px;
+  box-sizing: border-box;
+  place-items: center;
+  border: 1px solid #e0e5e8;
+  border-radius: 8px;
+  background: #f7f7f7;
+  overflow: hidden;
+}
+
+.popup-logo {
+  display: block;
+  width: min(100%, 272px);
+  height: auto;
+  max-height: 76px;
+  object-fit: contain;
 }
 
 .popup-brand {

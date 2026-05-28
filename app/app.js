@@ -7,12 +7,14 @@ const brandColors = {
   knauf: "#42A5E8",
   gyprock: "#111111",
   siniat: "#D91C8B",
+  hebel: "#243588",
 };
 
 const brandLabels = {
   knauf: "Knauf",
   gyprock: "CSR Gyprock",
   siniat: "Siniat",
+  hebel: "Hebel",
 };
 
 const state = {
@@ -41,6 +43,7 @@ const elements = {
   countKnauf: document.querySelector("#countKnauf"),
   countGyprock: document.querySelector("#countGyprock"),
   countSiniat: document.querySelector("#countSiniat"),
+  countHebel: document.querySelector("#countHebel"),
   searchInput: document.querySelector("#searchInput"),
   fitAllButton: document.querySelector("#fitAllButton"),
   clearSearchButton: document.querySelector("#clearSearchButton"),
@@ -63,17 +66,28 @@ function escapeHtml(value) {
 }
 
 function popupHtml(distributor) {
+  const logo = distributor.logoUrl
+    ? `
+      <div class="popup-logo-wrap">
+        <img class="popup-logo" src="${escapeHtml(distributor.logoUrl)}" alt="${escapeHtml(distributor.logoAlt || `${distributor.companyName} logo`)}" />
+      </div>
+    `
+    : "";
   const phone = distributor.phone ? `<div class="popup-row"><strong>Phone:</strong> ${escapeHtml(distributor.phone)}</div>` : "";
   const email = distributor.email
     ? `<div class="popup-row"><strong>Email:</strong> <a href="mailto:${escapeHtml(distributor.email)}">${escapeHtml(distributor.email)}</a></div>`
     : "";
-  const type = distributor.distributorType ? `<div class="popup-row"><strong>Type:</strong> ${escapeHtml(distributor.distributorType)}</div>` : "";
+  const types = distributor.categoryTypes?.length
+    ? distributor.categoryTypes
+    : [distributor.distributorType].filter(Boolean);
+  const type = types.length ? `<div class="popup-row"><strong>Type:</strong> ${escapeHtml(types.join(", "))}</div>` : "";
   const source = distributor.sourceUrl
     ? `<div class="popup-row"><a href="${escapeHtml(distributor.sourceUrl)}" target="_blank" rel="noreferrer">Source listing</a></div>`
     : "";
 
   return `
     <div class="popup" style="--popup-color:${distributor.color}">
+      ${logo}
       <span class="popup-brand">${escapeHtml(distributor.brand)}</span>
       <h2 class="popup-name">${escapeHtml(distributor.companyName)}</h2>
       ${type}
@@ -113,6 +127,7 @@ function createMarker(distributor) {
 function searchableText(distributor) {
   return [
     distributor.brand,
+    ...(distributor.categoryBrands || []),
     distributor.companyName,
     distributor.distributorType,
     distributor.address,
@@ -127,6 +142,10 @@ function searchableText(distributor) {
 
 function activeBrands() {
   return new Set(elements.brandInputs.filter((input) => input.checked).map((input) => input.value));
+}
+
+function distributorCategoryKeys(distributor) {
+  return [...new Set(distributor.categoryKeys || [distributor.brandKey])];
 }
 
 function searchTokens(value) {
@@ -170,7 +189,9 @@ function sortDefaultRows(rows) {
 function getFilteredRows() {
   const brands = activeBrands();
   const tokens = searchTokens(elements.searchInput.value);
-  const candidates = state.data.distributors.filter((distributor) => brands.has(distributor.brandKey));
+  const candidates = state.data.distributors.filter((distributor) =>
+    distributorCategoryKeys(distributor).some((brandKey) => brands.has(brandKey))
+  );
 
   state.searchSummary = null;
   if (!tokens.length) return sortDefaultRows(candidates);
@@ -215,13 +236,16 @@ function getFilteredRows() {
 
 function updateCounts(rows) {
   const counts = rows.reduce((acc, distributor) => {
-    acc[distributor.brandKey] = (acc[distributor.brandKey] ?? 0) + 1;
+    for (const brandKey of distributorCategoryKeys(distributor)) {
+      acc[brandKey] = (acc[brandKey] ?? 0) + 1;
+    }
     return acc;
   }, {});
 
   elements.countKnauf.textContent = counts.knauf ?? 0;
   elements.countGyprock.textContent = counts.gyprock ?? 0;
   elements.countSiniat.textContent = counts.siniat ?? 0;
+  elements.countHebel.textContent = counts.hebel ?? 0;
   elements.visibleCount.textContent = state.searchSummary?.matchCount
     ? `${rows.length} visible, ${state.searchSummary.matchCount} search match${state.searchSummary.matchCount === 1 ? "" : "es"}`
     : `${rows.length} visible of ${state.data.distributors.length} distributors`;
@@ -360,12 +384,23 @@ async function init() {
   if (!response.ok) throw new Error(`Could not load distributor data: ${response.status}`);
 
   const data = await response.json();
-  data.distributors = data.distributors.map((distributor) => ({
-    ...distributor,
-    color: brandColors[distributor.brandKey] || distributor.color || "#555555",
-    brand: brandLabels[distributor.brandKey] || distributor.brand,
-    searchText: searchableText(distributor),
-  }));
+  data.distributors = data.distributors.map((distributor) => {
+    const categoryKeys = distributorCategoryKeys(distributor);
+    const categoryBrands = distributor.categoryBrands || categoryKeys.map((brandKey) => brandLabels[brandKey] || brandKey);
+    const categoryTypes = distributor.categoryTypes || [distributor.distributorType].filter(Boolean);
+    const normalized = {
+      ...distributor,
+      color: distributor.color || brandColors[distributor.brandKey] || "#555555",
+      brand: brandLabels[distributor.brandKey] || distributor.brand,
+      categoryKeys,
+      categoryBrands,
+      categoryTypes,
+    };
+    return {
+      ...normalized,
+      searchText: searchableText(normalized),
+    };
+  });
   state.data = data;
 
   for (const distributor of data.distributors) {
