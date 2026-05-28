@@ -65,6 +65,42 @@ function escapeHtml(value) {
     .replace(/'/g, "&#039;");
 }
 
+function cssColor(value, fallback = "#555555") {
+  const color = String(value || "");
+  return /^#[0-9a-f]{3,8}$/i.test(color) ? color : fallback;
+}
+
+function categoryTags(distributor) {
+  const labels = distributor.categoryBrands || [];
+  const seen = new Set();
+
+  return distributorCategoryKeys(distributor).reduce((tags, brandKey, index) => {
+    const label = labels[index] || brandLabels[brandKey] || distributor.brand || brandKey;
+    const normalized = label.toLowerCase();
+    if (seen.has(normalized)) return tags;
+
+    seen.add(normalized);
+    tags.push({
+      label,
+      color: brandKey === distributor.brandKey
+        ? cssColor(distributor.color, brandColors[brandKey] || "#555555")
+        : brandColors[brandKey] || "#555555",
+    });
+    return tags;
+  }, []);
+}
+
+function categoryTagsHtml(distributor, wrapperClass, tagClass) {
+  const tags = categoryTags(distributor);
+  if (!tags.length) return "";
+
+  return `
+    <div class="${wrapperClass}" aria-label="Distributor categories">
+      ${tags.map((tag) => `<span class="${tagClass}" style="--tag-color:${tag.color}">${escapeHtml(tag.label)}</span>`).join("")}
+    </div>
+  `;
+}
+
 function popupHtml(distributor) {
   const logo = distributor.logoUrl
     ? `
@@ -88,7 +124,7 @@ function popupHtml(distributor) {
   return `
     <div class="popup" style="--popup-color:${distributor.color}">
       ${logo}
-      <span class="popup-brand">${escapeHtml(distributor.brand)}</span>
+      ${categoryTagsHtml(distributor, "popup-tags", "popup-brand")}
       <h2 class="popup-name">${escapeHtml(distributor.companyName)}</h2>
       ${type}
       <div class="popup-row"><strong>Address:</strong> ${escapeHtml(distributor.address)}</div>
@@ -263,6 +299,7 @@ function renderList(rows) {
 
   elements.distributorList.innerHTML = rows.map((distributor) => {
     const contact = [distributor.phone, distributor.email].filter(Boolean).join("  ");
+    const tags = categoryTagsHtml(distributor, "card-tags", "card-brand");
     const proximity =
       distributor.searchRole === "match"
         ? `<span class="card-pill">Match</span>`
@@ -272,7 +309,7 @@ function renderList(rows) {
     return `
       <button class="distributor-card" type="button" data-id="${escapeHtml(distributor.id)}" style="--brand-color:${distributor.color}">
         <div class="card-topline">
-          <span class="card-brand">${escapeHtml(distributor.brand)}</span>
+          ${tags}
           ${proximity}
         </div>
         <div class="card-name">${escapeHtml(distributor.companyName)}</div>

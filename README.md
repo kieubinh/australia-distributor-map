@@ -4,9 +4,9 @@ Australia Distributor Map is a static browser app for exploring plasterboard dis
 
 ## Preview
 
-![Australia Distributor Map overview](docs/images/app-overview.png)
+![Current Australia Distributor Map overview with Hebel filter](docs/images/app-overview.png)
 
-![Search and brand filter view](docs/images/app-search-filter.png)
+![BM Sydney search result with fitted logo and multi-category popup](docs/images/app-search-filter.png)
 
 ## Map Features
 
